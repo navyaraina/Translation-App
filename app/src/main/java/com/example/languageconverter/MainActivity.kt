@@ -1,39 +1,23 @@
 package com.example.languageconverter
 
 import ModelLanguage
-import android.nfc.Tag
+import android.app.ProgressDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
-import android.widget.Button
 import android.widget.EditText
 import android.widget.PopupMenu
 import android.widget.TextView
+import android.widget.Toast
 import com.example.LanguageConverter.R
-import androidx.activity.ComponentActivity
 import com.google.mlkit.common.model.DownloadConditions
 import com.google.mlkit.nl.translate.TranslateLanguage
 import com.google.mlkit.nl.translate.Translation
 import com.google.mlkit.nl.translate.TranslatorOptions
-import com.google.mlkit.nl.translate.TranslatorOptions.Builder
-import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.languageconverter.MainActivity
-import com.example.languageconverter.ui.theme.LanguageConverterTheme
 import com.google.android.material.button.MaterialButton
 import com.google.mlkit.nl.translate.Translator
 import java.util.Locale
-
-var conditions = DownloadConditions.Builder()
-    .requireWifi()
-    .build()
 
 class MainActivity : AppCompatActivity() {
 
@@ -57,6 +41,10 @@ class MainActivity : AppCompatActivity() {
     private var TranslatedLangCode="de"
     private var TranslatedLangTitle="German"
 
+    private lateinit var translatorOptions: TranslatorOptions
+    private lateinit var progressDialog: ProgressDialog
+    private lateinit var translator: Translator
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,6 +57,10 @@ class MainActivity : AppCompatActivity() {
         translangbtn=findViewById(R.id.translangbtn)
         translatebtn=findViewById(R.id.translatebtn)
 
+        progressDialog= ProgressDialog(this)
+        progressDialog.setTitle("Please Wait")
+        progressDialog.setCanceledOnTouchOutside(false)
+
         loadAvailableLanguages()
 
         sourcelangchoice.setOnClickListener {
@@ -80,10 +72,61 @@ class MainActivity : AppCompatActivity() {
         }
 
         translatebtn.setOnClickListener {
-
+            validateData()
         }
+    }
 
+    private var sourceLanguageText=""
+    private fun validateData() {
+        sourceLanguageText= SourceLang.text.toString().trim()
+        Log.d(TAG, "validateData: sourceLanguageText: $sourceLanguageText")
+
+        if(sourceLanguageText.isEmpty()){
+            showToast("Enter Text to Translate")
         }
+        else
+            startTranslation()
+    }
+
+    private fun startTranslation() {
+        progressDialog.setMessage("Processing Language Model")
+        progressDialog.show()
+
+        translatorOptions= TranslatorOptions.Builder()
+            .setSourceLanguage(sourceLangCode)
+            .setTargetLanguage(TranslatedLangCode)
+            .build()
+        translator=Translation.getClient(translatorOptions)
+
+        val downloadConditions= DownloadConditions.Builder()
+            .requireWifi()
+            .build()
+
+        translator.downloadModelIfNeeded(downloadConditions)
+            .addOnSuccessListener {
+                Log.d(TAG, "startTranslation: model ready, start translation")
+
+                progressDialog.setMessage("Translating")
+
+                translator.translate(sourceLanguageText)
+                    .addOnSuccessListener { translatedText->
+                        Log.d(TAG, "startTranslation: translatedText: $translatedText")
+                        progressDialog.dismiss()
+
+                        TranslatedLang.text= translatedText
+                    }
+                    .addOnFailureListener { e->
+                        progressDialog.dismiss()
+                        Log.e(TAG, "startTranslation:",e)
+                        showToast("failure due to ${e.message}")
+                    }
+            }
+            .addOnFailureListener { e->
+                progressDialog.dismiss()
+                Log.e(TAG, "startTranslation:",e)
+                showToast("failure due to ${e.message}")
+            }
+    }
 
     private fun loadAvailableLanguages(){
         LangArrayList=ArrayList()
@@ -143,5 +186,8 @@ class MainActivity : AppCompatActivity() {
             Log.d(TAG,"transLanguageChoose: TranslatedLangTitle: $TranslatedLangTitle")
             false
         }
+    }
+    private fun showToast(message: String){
+        Toast.makeText(this,message,Toast.LENGTH_LONG).show()
     }
 }
