@@ -72,11 +72,11 @@ class MainActivity : AppCompatActivity() {
         loadAvailableLanguages()
 
         sourcelangchoice.setOnClickListener {
-
+            sourceLanguageChoose()
         }
 
         translangbtn.setOnClickListener {
-
+            transLanguageChoose()
         }
 
         translatebtn.setOnClickListener {
@@ -104,9 +104,44 @@ class MainActivity : AppCompatActivity() {
         val popupMenu= PopupMenu(this,sourcelangchoice)
 
         for(i in LangArrayList!!.indices){
-            popupMenu.menu.add(Menu.NONE, i, i, LangArrayList!![i].languageTitle)
+            popupMenu.menu.add(Menu.NONE, i, i, LangArrayList!![i].LanguageTitle)
         }
 
         popupMenu.show()
+
+        popupMenu.setOnMenuItemClickListener { menuItem->
+            val position = menuItem.itemId
+            sourceLangCode=LangArrayList!![position].LanguageCode
+            sourceLangTitle=LangArrayList!![position].LanguageTitle
+
+            sourcelangchoice.text=sourceLangTitle
+            SourceLang.hint="Enter $sourceLangTitle"
+
+            Log.d(TAG,"sourceLanguageChoose: sourceLangCode: $sourceLangCode")
+            Log.d(TAG,"sourceLanguageChoose: sourceLangTitle: $sourceLangTitle")
+            false
+        }
+    }
+
+    private fun transLanguageChoose(){
+        val popupMenu= PopupMenu(this,translangbtn)
+
+        for(i in LangArrayList!!.indices){
+            popupMenu.menu.add(Menu.NONE, i, i, LangArrayList!![i].LanguageTitle)
+        }
+
+        popupMenu.show()
+
+        popupMenu.setOnMenuItemClickListener { menuItem->
+            val position = menuItem.itemId
+            TranslatedLangCode=LangArrayList!![position].LanguageCode
+            TranslatedLangTitle=LangArrayList!![position].LanguageTitle
+
+            translangbtn.text=TranslatedLangTitle
+
+            Log.d(TAG,"transLanguageChoose: TranslatedLangCode: $TranslatedLangCode")
+            Log.d(TAG,"transLanguageChoose: TranslatedLangTitle: $TranslatedLangTitle")
+            false
+        }
     }
 }
