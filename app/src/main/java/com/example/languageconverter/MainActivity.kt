@@ -3,6 +3,8 @@ package com.example.languageconverter
 import ModelLanguage
 import android.app.ProgressDialog
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.button.MaterialButton
 import android.util.Log
 import android.view.Menu
 import android.widget.EditText
@@ -14,8 +16,6 @@ import com.google.mlkit.common.model.DownloadConditions
 import com.google.mlkit.nl.translate.TranslateLanguage
 import com.google.mlkit.nl.translate.Translation
 import com.google.mlkit.nl.translate.TranslatorOptions
-import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.button.MaterialButton
 import com.google.mlkit.nl.translate.Translator
 import java.util.Locale
 
