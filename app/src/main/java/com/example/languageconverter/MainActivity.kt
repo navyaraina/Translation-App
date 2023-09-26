@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var SourceLang: EditText
     private lateinit var TranslatedLang: TextView
     private lateinit var sourcelangchoice: MaterialButton
-    private lateinit var translangbtn: MaterialButton
+    private lateinit var translangchoice: MaterialButton
     private lateinit var translatebtn: MaterialButton
 
     companion object{
@@ -54,9 +54,10 @@ class MainActivity : AppCompatActivity() {
         SourceLang=findViewById(R.id.SourceLang)
         TranslatedLang=findViewById(R.id.TranslatedLang)
         sourcelangchoice=findViewById(R.id.sourcelangchoice)
-        translangbtn=findViewById(R.id.translangbtn)
+        translangchoice=findViewById(R.id.translangchoice)
         translatebtn=findViewById(R.id.translatebtn)
 
+//      displays dialogue, this provides context to the constructor
         progressDialog= ProgressDialog(this)
         progressDialog.setTitle("Please Wait")
         progressDialog.setCanceledOnTouchOutside(false)
@@ -67,7 +68,7 @@ class MainActivity : AppCompatActivity() {
             sourceLanguageChoose()
         }
 
-        translangbtn.setOnClickListener {
+        translangchoice.setOnClickListener {
             transLanguageChoose()
         }
 
@@ -92,6 +93,7 @@ class MainActivity : AppCompatActivity() {
         progressDialog.setMessage("Processing Language Model")
         progressDialog.show()
 
+//      creating a translator object
         translatorOptions= TranslatorOptions.Builder()
             .setSourceLanguage(sourceLangCode)
             .setTargetLanguage(TranslatedLangCode)
@@ -167,7 +169,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun transLanguageChoose(){
-        val popupMenu= PopupMenu(this,translangbtn)
+        val popupMenu= PopupMenu(this,translangchoice)
 
         for(i in LangArrayList!!.indices){
             popupMenu.menu.add(Menu.NONE, i, i, LangArrayList!![i].LanguageTitle)
@@ -180,7 +182,7 @@ class MainActivity : AppCompatActivity() {
             TranslatedLangCode=LangArrayList!![position].LanguageCode
             TranslatedLangTitle=LangArrayList!![position].LanguageTitle
 
-            translangbtn.text=TranslatedLangTitle
+            translangchoice.text=TranslatedLangTitle
 
             Log.d(TAG,"transLanguageChoose: TranslatedLangCode: $TranslatedLangCode")
             Log.d(TAG,"transLanguageChoose: TranslatedLangTitle: $TranslatedLangTitle")

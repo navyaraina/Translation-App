@@ -28,7 +28,7 @@
             <TextView
                 android:id="@+id/TranslatedLang"
                 android:layout_marginTop="10dp"
-                android:textSize="18sp"
+                android:textSize="25sp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="">
@@ -62,7 +62,7 @@
         </ImageView>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/translangbtn"
+            android:id="@+id/translangchoice"
             android:layout_width="wrap_content"
             android:text="GERMAN"
             android:layout_marginEnd="5dp"
