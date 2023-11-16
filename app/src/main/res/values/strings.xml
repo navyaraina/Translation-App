@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">LanguageConverter</string>
+    <string name="enter_text">enter text</string>
+    <string name="translated_text">translated text</string>
 </resources>

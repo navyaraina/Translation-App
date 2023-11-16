@@ -1,3 +1,3 @@
-class ModelLanguage(var LanguageCode: String, var LanguageTitle: String) {
+public class ModelLanguage(var LanguageCode: String, var LanguageTitle: String) {
 
 }
